@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express();
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config()
 
 
@@ -23,13 +24,23 @@ async function run() {
         const planCollection = database.collection("plans");
 
 
-        // GET APP 
+        // GET API 
         app.get('/plans', async (req, res) => {
             const cursor = planCollection.find({});
             const plans = await cursor.toArray();
-            console.log(plans)
+            // console.log(plans)
             res.send(plans)
+        });
+
+        // GET SINGLE DATA API 
+        app.get('/plans/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id, 'get id');
+            const query = { _id: ObjectId(id) }
+            const plan = await planCollection.findOne(query);
+            res.json(plan);
         })
+
     }
     finally {
         // await client.close()
