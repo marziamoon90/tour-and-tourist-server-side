@@ -22,6 +22,7 @@ async function run() {
         // console.log('database server tour and tourist is connected');
         const database = client.db("tour-and-tourist");
         const planCollection = database.collection("plans");
+        const bookingCollection = database.collection("booking");
 
 
         // GET API 
@@ -39,6 +40,14 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const plan = await planCollection.findOne(query);
             res.json(plan);
+        })
+
+        // ADD BOOKING PLAN 
+        app.post('/booking', async (req, res) => {
+            const booking = req.body;
+            console.log('booking', booking);
+            const result = await bookingCollection.insertOne(booking)
+            res.json(result)
         })
 
     }
